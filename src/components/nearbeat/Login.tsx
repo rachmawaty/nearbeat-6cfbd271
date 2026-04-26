@@ -1,5 +1,6 @@
 import { PERSONAS } from "@/data/nearbeat";
 import { Sparkles, ChevronRight } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface Props {
   onPick: (key: string) => void;
@@ -7,7 +8,10 @@ interface Props {
 
 export function Login({ onPick }: Props) {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center px-4 py-10">
+    <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-10">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-md fade-up">
         <div className="mb-8 flex flex-col items-center text-center">
           <div

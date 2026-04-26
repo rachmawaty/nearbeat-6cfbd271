@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { INTEGRATIONS } from "@/data/nearbeat";
 import { Check, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface Props {
   onDone: () => void;
@@ -24,7 +25,10 @@ export function Onboarding({ onDone }: Props) {
   const count = INTEGRATIONS.filter((i) => connected[i.key]).length;
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center px-4 py-8">
+    <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-8">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-md fade-up">
         <div className="mb-6 flex flex-col items-center text-center">
           <div
