@@ -27,18 +27,18 @@ export function Login({ onPick }: Props) {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-border/60 bg-card/70 p-2 backdrop-blur-md shadow-[var(--shadow-card)]">
+        <div className="rounded-2xl border border-border/60 bg-card/70 p-2 backdrop-blur-md shadow-[var(--shadow-card)] overflow-hidden">
           <div className="px-3 pt-2 pb-3">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               Sign in as
             </span>
           </div>
-          <div className="grid gap-2">
+          <div className="grid grid-cols-1 gap-2 min-w-0">
             {PERSONAS.map((p) => (
               <button
                 key={p.key}
                 onClick={() => onPick(p.key)}
-                className="group flex items-center gap-3 rounded-xl border border-border/60 bg-background/40 px-3 py-3 text-left transition-all hover:border-primary/50 hover:bg-primary/5"
+                className="group flex w-full min-w-0 items-center gap-3 rounded-xl border border-border/60 bg-background/40 px-3 py-3 text-left transition-all hover:border-primary/50 hover:bg-primary/5"
               >
                 <div
                   className="flex h-12 w-12 items-center justify-center rounded-xl text-2xl shrink-0"
