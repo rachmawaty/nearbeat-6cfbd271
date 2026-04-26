@@ -91,13 +91,20 @@ export function Onboarding({ onDone }: Props) {
         </div>
 
         <Button
-          disabled={!allConnected}
           onClick={onDone}
           className="mt-5 h-12 w-full text-base"
-          style={allConnected ? { background: "var(--gradient-brand)" } : undefined}
+          style={{ background: "var(--gradient-brand)" }}
         >
-          {allConnected ? "Open my wallet →" : `Connect ${INTEGRATIONS.length - count} more to continue`}
+          {count === 0
+            ? "Skip for now → Open my wallet"
+            : count === INTEGRATIONS.length
+              ? "Open my wallet →"
+              : `Continue with ${count} signal${count === 1 ? "" : "s"} →`}
         </Button>
+
+        <p className="mt-2 text-center text-[11px] text-muted-foreground">
+          Connect only what you want — offers will use whatever signals you share.
+        </p>
 
         <p className="mt-4 text-center text-[11px] text-muted-foreground">
           Demo prototype · No real OAuth · Mock data only
