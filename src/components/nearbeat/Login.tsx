@@ -46,15 +46,17 @@ export function Login({ onPick }: Props) {
                 >
                   <span>{p.avatar}</span>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-baseline gap-2">
-                    <span className="font-display text-base font-semibold leading-tight">
+                <div className="min-w-0 flex-1 overflow-hidden">
+                  <div className="flex items-baseline gap-2 min-w-0">
+                    <span className="font-display text-base font-semibold leading-tight truncate">
                       {p.name}
                     </span>
-                    <span className="text-[11px] text-muted-foreground">{p.occupation}</span>
+                    <span className="text-[11px] text-muted-foreground truncate shrink">
+                      {p.occupation}
+                    </span>
                   </div>
                   <p className="text-xs text-muted-foreground truncate">{p.subtitle}</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">📍 {p.area}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 truncate">📍 {p.area}</p>
                 </div>
                 <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
               </button>
