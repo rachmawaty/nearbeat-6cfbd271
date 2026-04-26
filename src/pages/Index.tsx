@@ -6,6 +6,7 @@ import { OfferCard } from "@/components/nearbeat/OfferCard";
 import { LiveContextDrawer } from "@/components/nearbeat/LiveContextDrawer";
 import { Onboarding } from "@/components/nearbeat/Onboarding";
 import { Login } from "@/components/nearbeat/Login";
+import { ThemeToggle } from "@/components/nearbeat/ThemeToggle";
 import { toast } from "@/hooks/use-toast";
 import { Sparkles, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -67,13 +68,14 @@ const Index = () => {
             <p className="text-[10px] text-muted-foreground">Your city pulse</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <LiveContextDrawer persona={persona} />
+          <ThemeToggle />
           <Button
             variant="ghost"
-            size="sm"
+            size="icon"
             onClick={handleSignOut}
-            className="gap-1.5 rounded-full text-muted-foreground hover:text-foreground"
+            className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground"
             title="Switch account"
           >
             <LogOut className="h-4 w-4" />

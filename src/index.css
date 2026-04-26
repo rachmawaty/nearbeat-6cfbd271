@@ -3,8 +3,69 @@
 @tailwind utilities;
 
 @layer base {
+  /* LIGHT THEME (default :root) */
   :root {
-    /* Nearbeat — dark city-wallet theme */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 217 91% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217 33% 94%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 217 33% 94%;
+    --muted-foreground: 215 16% 40%;
+
+    --accent: 217 33% 92%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 217 25% 88%;
+    --input: 217 25% 88%;
+    --ring: 217 91% 55%;
+
+    --radius: 1rem;
+
+    /* Signal palette (PRD §7) — same hues both modes */
+    --signal-route: 217 91% 55%;
+    --signal-schedule: 258 80% 58%;
+    --signal-habit: 38 92% 45%;
+    --signal-weather: 0 80% 55%;
+    --signal-spend: 160 84% 35%;
+    --signal-health: 173 80% 36%;
+    --signal-email: 239 75% 60%;
+
+    --offer-green: 160 84% 35%;
+
+    --gradient-pulse: radial-gradient(120% 80% at 50% 0%, hsl(217 91% 60% / 0.10), transparent 60%);
+    --gradient-offer: linear-gradient(135deg, hsl(217 91% 60% / 0.07), hsl(258 90% 66% / 0.05));
+    --gradient-brand: linear-gradient(135deg, hsl(217 91% 55%), hsl(258 80% 60%));
+    --shadow-card: 0 10px 30px -12px hsl(222 47% 30% / 0.18);
+    --shadow-glow: 0 0 0 1px hsl(217 91% 55% / 0.3), 0 12px 40px -12px hsl(217 91% 55% / 0.35);
+
+    --transition-smooth: 240ms cubic-bezier(0.22, 1, 0.36, 1);
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 217 91% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 33% 94%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 217 25% 88%;
+    --sidebar-ring: 217 91% 55%;
+  }
+
+  /* DARK THEME */
+  .dark {
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
 
@@ -33,9 +94,6 @@
     --input: 217 33% 22%;
     --ring: 217 91% 60%;
 
-    --radius: 1rem;
-
-    /* Signal palette (PRD §7) */
     --signal-route: 217 91% 60%;
     --signal-schedule: 258 90% 66%;
     --signal-habit: 38 92% 50%;
@@ -51,8 +109,6 @@
     --gradient-brand: linear-gradient(135deg, hsl(217 91% 60%), hsl(258 90% 66%));
     --shadow-card: 0 10px 30px -10px hsl(222 47% 4% / 0.6);
     --shadow-glow: 0 0 0 1px hsl(217 91% 60% / 0.35), 0 12px 40px -12px hsl(217 91% 60% / 0.45);
-
-    --transition-smooth: 240ms cubic-bezier(0.22, 1, 0.36, 1);
 
     --sidebar-background: 222 47% 11%;
     --sidebar-foreground: 210 40% 98%;
@@ -75,6 +131,7 @@
     -webkit-font-smoothing: antialiased;
     background-image: var(--gradient-pulse);
     background-attachment: fixed;
+    transition: background-color 240ms ease, color 240ms ease;
   }
 
   h1, h2, h3, .font-display {
