@@ -19,6 +19,16 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        signal: {
+          route: "hsl(var(--signal-route))",
+          schedule: "hsl(var(--signal-schedule))",
+          habit: "hsl(var(--signal-habit))",
+          weather: "hsl(var(--signal-weather))",
+          spend: "hsl(var(--signal-spend))",
+          health: "hsl(var(--signal-health))",
+          email: "hsl(var(--signal-email))",
+        },
+        offer: "hsl(var(--offer-green))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
