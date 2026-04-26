@@ -3,15 +3,16 @@ import { PERSONAS, type Offer } from "@/data/nearbeat";
 import { ContextBar } from "@/components/nearbeat/ContextBar";
 import { IntegrationStatusBar } from "@/components/nearbeat/IntegrationStatusBar";
 import { OfferCard } from "@/components/nearbeat/OfferCard";
-import { PersonaSwitcher } from "@/components/nearbeat/PersonaSwitcher";
 import { LiveContextDrawer } from "@/components/nearbeat/LiveContextDrawer";
 import { Onboarding } from "@/components/nearbeat/Onboarding";
+import { Login } from "@/components/nearbeat/Login";
 import { toast } from "@/hooks/use-toast";
-import { Sparkles } from "lucide-react";
+import { Sparkles, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
-  const [onboarded, setOnboarded] = useState(false);
-  const [activeKey, setActiveKey] = useState(PERSONAS[0].key);
+  const [activeKey, setActiveKey] = useState<string | null>(null);
+  const [onboardedKeys, setOnboardedKeys] = useState<Set<string>>(new Set());
   const [time, setTime] = useState(() => formatTime(new Date()));
 
   useEffect(() => {
@@ -31,7 +32,25 @@ const Index = () => {
     });
   };
 
-  if (!onboarded) return <Onboarding onDone={() => setOnboarded(true)} />;
+  const handleSignOut = () => {
+    setActiveKey(null);
+  };
+
+  if (!activeKey) return <Login onPick={(k) => setActiveKey(k)} />;
+
+  if (!onboardedKeys.has(activeKey)) {
+    return (
+      <Onboarding
+        onDone={() =>
+          setOnboardedKeys((prev) => {
+            const next = new Set(prev);
+            next.add(activeKey);
+            return next;
+          })
+        }
+      />
+    );
+  }
 
   return (
     <main className="min-h-screen w-full px-4 py-5 mx-auto max-w-md">
@@ -48,12 +67,19 @@ const Index = () => {
             <p className="text-[10px] text-muted-foreground">Your city pulse</p>
           </div>
         </div>
-        <LiveContextDrawer persona={persona} />
+        <div className="flex items-center gap-2">
+          <LiveContextDrawer persona={persona} />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleSignOut}
+            className="gap-1.5 rounded-full text-muted-foreground hover:text-foreground"
+            title="Switch account"
+          >
+            <LogOut className="h-4 w-4" />
+          </Button>
+        </div>
       </header>
-
-      <section className="mb-3">
-        <PersonaSwitcher active={activeKey} onChange={setActiveKey} />
-      </section>
 
       <section key={persona.key} className="space-y-4 fade-up">
         <ContextBar persona={persona} time={time} />
