@@ -121,7 +121,6 @@ const Index = () => {
             <span className="text-[11px] lg:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               3 offers for you · just now
             </span>
-            <span className="text-[10px] lg:text-xs text-muted-foreground">via Claude</span>
           </div>
           <div className="grid gap-3 md:gap-4 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
             {persona.offers.map((o, i) => (
