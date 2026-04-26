@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { PERSONAS, type Offer } from "@/data/nearbeat";
 import { ContextBar } from "@/components/nearbeat/ContextBar";
 import { IntegrationStatusBar } from "@/components/nearbeat/IntegrationStatusBar";
@@ -7,6 +7,9 @@ import { LiveContextDrawer } from "@/components/nearbeat/LiveContextDrawer";
 import { Onboarding } from "@/components/nearbeat/Onboarding";
 import { Login } from "@/components/nearbeat/Login";
 import { ThemeToggle } from "@/components/nearbeat/ThemeToggle";
+import { AgentThinking } from "@/components/nearbeat/AgentThinking";
+import { useAgent } from "@/hooks/useAgent";
+import { useHeartbeat } from "@/hooks/useHeartbeat";
 import { toast } from "@/hooks/use-toast";
 import { Sparkles, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,25 +19,42 @@ const Index = () => {
   const [onboardedKeys, setOnboardedKeys] = useState<Set<string>>(new Set());
   const [time, setTime] = useState(() => formatTime(new Date()));
 
-  useEffect(() => {
-    const id = setInterval(() => setTime(formatTime(new Date())), 30_000);
-    return () => clearInterval(id);
-  }, []);
+  const agent = useAgent();
 
   const persona = useMemo(
     () => PERSONAS.find((p) => p.key === activeKey) ?? PERSONAS[0],
     [activeKey],
   );
 
-  const handleClaim = (o: Offer) => {
-    toast({
-      title: `${o.merchant_name} — claimed`,
-      description: o.offer,
-    });
-  };
+  // Active offers: AI-generated if available, else hardcoded persona offers
+  const activeOffers: Offer[] = agent.result?.offers ?? persona.offers;
 
-  const handleSignOut = () => {
-    setActiveKey(null);
+  const runAgent = useCallback(() => {
+    agent.run(persona);
+  }, [agent, persona]);
+
+  // Heartbeat: re-run agent when context changes significantly
+  const heartbeat = useHeartbeat(
+    useCallback((reason: string) => {
+      if (!activeKey) return;
+      toast({ title: "Context updated", description: reason });
+    }, [activeKey]),
+    15 // stale after 15 minutes
+  );
+
+  useEffect(() => {
+    const id = setInterval(() => setTime(formatTime(new Date())), 30_000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Reset agent result when persona changes
+  useEffect(() => {
+    agent.reset();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeKey]);
+
+  const handleClaim = (o: Offer) => {
+    toast({ title: `${o.merchant_name} — claimed`, description: o.offer });
   };
 
   if (!activeKey) return <Login onPick={(k) => setActiveKey(k)} />;
@@ -74,7 +94,7 @@ const Index = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={handleSignOut}
+            onClick={() => setActiveKey(null)}
             className="gap-1.5 rounded-full text-muted-foreground hover:text-foreground"
             title="Switch account"
           >
@@ -84,12 +104,11 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Mobile-first single column; desktop becomes 2-column wallet */}
       <section
         key={persona.key}
         className="fade-up grid gap-5 lg:gap-8 lg:grid-cols-[360px_1fr] xl:grid-cols-[400px_1fr]"
       >
-        {/* LEFT — context column */}
+        {/* LEFT — context + agent panel */}
         <div className="space-y-4 lg:space-y-5 lg:sticky lg:top-5 lg:self-start">
           <ContextBar persona={persona} time={time} />
 
@@ -99,32 +118,46 @@ const Index = () => {
                 Live signals
               </span>
               <span className="hidden lg:inline text-[10px] text-muted-foreground">
-                Auto-refreshing
+                Heartbeat active
               </span>
             </div>
             <IntegrationStatusBar />
           </div>
 
-          <div className="hidden lg:block rounded-2xl border border-border/60 bg-card/60 p-4 backdrop-blur-md shadow-[var(--shadow-card)]">
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              Nearbeat reasons over your live context — bank, calendar, route, weather,
-              health, email — to surface 3 offers tailored to{" "}
-              <span className="text-foreground font-medium">right now</span>. Every offer
-              cites the exact signal that triggered it.
-            </p>
-          </div>
+          {/* Agent panel */}
+          <AgentThinking
+            steps={agent.steps}
+            loading={agent.loading}
+            reasoning={agent.result?.agent_reasoning}
+            signals={agent.result?.signals_active}
+            error={agent.error}
+            onRun={runAgent}
+            hasResult={!!agent.result}
+            stale={heartbeat.stale}
+            minutesSince={heartbeat.minutesSince}
+          />
         </div>
 
         {/* RIGHT — offers */}
         <div>
           <div className="mb-3 flex items-center justify-between px-1">
             <span className="text-[11px] lg:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              3 offers for you · just now
+              {agent.result ? "AI-generated offers · just now" : "3 offers for you · just now"}
             </span>
+            {agent.result && (
+              <span className="text-[10px] text-muted-foreground">
+                ✦ {agent.result._input_tokens + agent.result._output_tokens} tokens
+              </span>
+            )}
           </div>
+
           <div className="grid gap-3 md:gap-4 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-            {persona.offers.map((o, i) => (
-              <div key={o.merchant_id} className="fade-up" style={{ animationDelay: `${i * 80}ms` }}>
+            {(agent.loading ? persona.offers : activeOffers).map((o, i) => (
+              <div
+                key={o.merchant_id}
+                className={`fade-up ${agent.loading ? "opacity-40" : ""}`}
+                style={{ animationDelay: `${i * 80}ms` }}
+              >
                 <OfferCard offer={o} onClaim={handleClaim} index={i} />
               </div>
             ))}
